@@ -1,4 +1,3 @@
-
 // Linear Math
 
 interface btVector3 {
@@ -302,7 +301,6 @@ interface btConvexPolyhedron {
 };
 
 interface btConvexHullShape : btCollisionShape {
-  void btConvexHullShape([Const] optional [Array] float points, optional long numPoints);
   void addPoint([Const, Ref] btVector3 point, optional boolean recalculateLocalAABB);
   void setMargin(float margin);
   float getMargin();
@@ -458,10 +456,8 @@ interface btRigidBody : btCollisionObject {
   void setMassProps(float mass, [Const, Ref] btVector3 inertia);
   void setLinearFactor([Const, Ref] btVector3 linearFactor);
   void applyTorque([Const, Ref] btVector3 torque);
-  void applyLocalTorque([Const, Ref] btVector3 torque);
   void applyForce([Const, Ref] btVector3 force, [Const, Ref] btVector3 rel_pos);
   void applyCentralForce([Const, Ref] btVector3 force);
-  void applyCentralLocalForce([Const, Ref] btVector3 force);
   void applyTorqueImpulse([Const, Ref] btVector3 torque);
   void applyImpulse([Const, Ref] btVector3 impulse, [Const, Ref] btVector3 rel_pos);
   void applyCentralImpulse([Const, Ref] btVector3 impulse);
@@ -608,10 +604,6 @@ interface btCollisionWorld {
   void contactPairTest(btCollisionObject colObjA, btCollisionObject colObjB, [Ref] ContactResultCallback resultCallback);
   void contactTest(btCollisionObject colObj, [Ref] ContactResultCallback resultCallback);
   void updateSingleAabb(btCollisionObject colObj);
-  void setDebugDrawer(btIDebugDraw debugDrawer);
-  btIDebugDraw getDebugDrawer();
-  void debugDrawWorld();
-  void debugDrawObject([Const, Ref] btTransform worldTransform, [Const] btCollisionShape shape, [Const, Ref] btVector3 color);
 };
 
 interface btContactSolverInfo {
@@ -624,27 +616,6 @@ interface btDynamicsWorld : btCollisionWorld {
   void addAction(btActionInterface action);
   void removeAction(btActionInterface action);
   [Ref] btContactSolverInfo getSolverInfo();
-};
-
-interface btDiscreteDynamicsWorld : btDynamicsWorld {
-  void btDiscreteDynamicsWorld(btDispatcher dispatcher, btBroadphaseInterface pairCache, btConstraintSolver constraintSolver, btCollisionConfiguration collisionConfiguration);
-
-  void setGravity([Ref] btVector3 gravity);
-  [Value] btVector3 getGravity();
-
-  void addRigidBody(btRigidBody body);
-  void addRigidBody(btRigidBody body, short group, short mask);
-  void removeRigidBody(btRigidBody body);
-
-  void addConstraint(btTypedConstraint constraint, optional boolean disableCollisionsBetweenLinkedBodies);
-  void removeConstraint(btTypedConstraint constraint);
-
-  long stepSimulation(float timeStep, optional long maxSubSteps, optional float fixedTimeStep);
-
-	// Contact callback support
-  void setContactAddedCallback(long funcpointer);
-  void setContactProcessedCallback(long funcpointer);
-  void setContactDestroyedCallback(long funcpointer);
 };
 
 [Prefix="btRaycastVehicle::", NoDelete]
@@ -735,9 +706,7 @@ interface btActionInterface {
 };
 
 interface btKinematicCharacterController : btActionInterface {
-  void btKinematicCharacterController(btPairCachingGhostObject ghostObject, btConvexShape convexShape, float stepHeight, optional long upAxis);
-
-  void setUpAxis (long axis);
+  void btKinematicCharacterController(btPairCachingGhostObject ghostObject, btConvexShape convexShape, float stepHeight);
   void setWalkDirection ([Const,Ref] btVector3 walkDirection);
   void setVelocityForTimeInterval ([Const,Ref] btVector3 velocity, float timeInterval);
   //void reset ();
@@ -749,8 +718,6 @@ interface btKinematicCharacterController : btActionInterface {
   void setMaxJumpHeight (float maxJumpHeight);
   boolean canJump ();
   void jump ();
-  void setGravity (float gravity);
-  float getGravity ();
   void setMaxSlope (float slopeRadians);
   float getMaxSlope ();
   btPairCachingGhostObject getGhostObject ();
@@ -945,17 +912,6 @@ interface btDefaultSoftBodySolver : btSoftBodySolver {
 interface btSoftBodyArray {
   [Const] long size();
   [Const] btSoftBody at(long n);
-};
-
-interface btSoftRigidDynamicsWorld : btDiscreteDynamicsWorld {
-  void btSoftRigidDynamicsWorld(btDispatcher dispatcher, btBroadphaseInterface pairCache, btConstraintSolver constraintSolver, btCollisionConfiguration collisionConfiguration, btSoftBodySolver softBodySolver);
-
-  void addSoftBody(btSoftBody body, short collisionFilterGroup, short collisionFilterMask);
-  void removeSoftBody(btSoftBody body);
-  void removeCollisionObject(btCollisionObject collisionObject);
-
-  [Ref] btSoftBodyWorldInfo getWorldInfo();
-  [Ref] btSoftBodyArray getSoftBodyArray();
 };
 
 interface btSoftBodyHelpers {

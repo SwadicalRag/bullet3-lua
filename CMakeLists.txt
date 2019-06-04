@@ -413,28 +413,28 @@ IF (INSTALL_CMAKE_FILES)
 ENDIF (INSTALL_CMAKE_FILES)
 
 add_custom_command(
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl
 	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/bindings.cpp
-	COMMAND lua-webidl ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl ${CMAKE_CURRENT_SOURCE_DIR}/bindings.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/btBulletDynamicsCommon.h --cpp --libmode 
+	COMMAND lua-webidl ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl ${CMAKE_CURRENT_SOURCE_DIR}/bindings.cpp src/btBulletDynamicsCommon.h src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h src/BulletCollision/CollisionShapes/btConvexPolyhedron.h src/BulletCollision/CollisionShapes/btShapeHull.h src/BulletCollision/CollisionDispatch/btGhostObject.h src/BulletDynamics/Character/btKinematicCharacterController.h src/BulletSoftBody/btSoftBody.h src/BulletSoftBody/btDefaultSoftBodySolver.h src/BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h src/BulletSoftBody/btSoftBodyHelpers.h bind_templates.h --cpp --libmode 
 )
 
-set(EXECUTABLE_OUTPUT_PATH "bin")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 include_directories(
-	"${BULLET_PHYSICS_SOURCE_DIR}/src"
+	"${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 add_executable(
-	bullet3_lua_wasm ${CMAKE_CURRENT_SOURCE_DIR}/bindings.cpp
+	bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bindings.cpp
 )
 target_link_libraries(
-	bullet3_lua_wasm
-	
-	BulletDynamics BulletCollision LinearMath
+	bullet3_lua.wasm
+	BulletInverseDynamics BulletSoftBody BulletCollision Bullet3Collision BulletDynamics Bullet3Dynamics LinearMath Bullet3Common Bullet3Geometry
 )
 
 add_custom_command(
-	DEPENDS bullet3_lua_wasm
-	OUTPUT bullet3.lua
-	COMMAND wasm2lua bin/bullet3_lua_wasm bullet3.lua --libmode 
+	DEPENDS bullet3_lua.wasm
+	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.lua
+	COMMAND wasm2lua ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.lua -b ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl --libmode 
 )
 
-add_custom_target(bullet3_lua ALL DEPENDS bullet3.lua)
+add_custom_target(bullet3_lua ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.lua)
