@@ -1,4 +1,4 @@
-local module = dofile("bin/bullet3.lua")
+local module = dofile("bin/bullet3.pure.min.lua")
 
 module.init()
 

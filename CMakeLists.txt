@@ -437,4 +437,25 @@ add_custom_command(
 	COMMAND wasm2lua ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.lua -b ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl --libmode 
 )
 
+add_custom_command(
+	DEPENDS bullet3_lua.wasm
+	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.min.lua
+	COMMAND wasm2lua ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.min.lua -b ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl --libmode --minify
+)
+
+add_custom_command(
+	DEPENDS bullet3_lua.wasm
+	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.pure.lua
+	COMMAND wasm2lua ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.pure.lua -b ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl --libmode --pureLua
+)
+
+add_custom_command(
+	DEPENDS bullet3_lua.wasm
+	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.pure.min.lua
+	COMMAND wasm2lua ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.pure.min.lua -b ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl --libmode --pureLua --minify
+)
+
 add_custom_target(bullet3_lua ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.lua)
+add_custom_target(bullet3_lua_min ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.min.lua)
+add_custom_target(bullet3_purelua ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.pure.lua)
+add_custom_target(bullet3_purelua_min ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.pure.min.lua)
