@@ -282,7 +282,6 @@ interface btIntArray {
 
 interface btFace {
   [Value] attribute btIntArray m_indices;
-  attribute [Array] float m_plane;
 };
 
 interface btVector3Array {
@@ -616,6 +615,22 @@ interface btDynamicsWorld : btCollisionWorld {
   void addAction(btActionInterface action);
   void removeAction(btActionInterface action);
   [Ref] btContactSolverInfo getSolverInfo();
+};
+
+interface btDiscreteDynamicsWorld {
+  void btDiscreteDynamicsWorld(btDispatcher dispatcher, btBroadphaseInterface pairCache, btConstraintSolver constraintSolver, btCollisionConfiguration collisionConfiguration);
+
+  void setGravity([Ref] btVector3 gravity);
+  [Value] btVector3 getGravity();
+
+  void addRigidBody(btRigidBody body);
+  void addRigidBody(btRigidBody body, short group, short mask);
+  void removeRigidBody(btRigidBody body);
+
+  void addConstraint(btTypedConstraint constraint, optional boolean disableCollisionsBetweenLinkedBodies);
+  void removeConstraint(btTypedConstraint constraint);
+
+  long stepSimulation(float timeStep, optional long maxSubSteps, optional float fixedTimeStep);
 };
 
 [Prefix="btRaycastVehicle::", NoDelete]
