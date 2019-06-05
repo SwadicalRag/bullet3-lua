@@ -1,4 +1,6 @@
-local module = dofile("bin/bullet3.pure.min.lua")
+jit.opt.start("maxtrace=8000","maxsnap=2560000","loopunroll=500","maxmcode=16384","maxrecord=16000","maxirconst=4000")
+
+local module = dofile("bin/bullet3.min.lua")
 
 module.init()
 
@@ -32,7 +34,7 @@ local boxShape = module.bindings.btBoxShape(module.bindings.btVector3(1, 1, 1));
 
 local function resetPositions()
     local side = math.ceil(math.pow(50, 1/3));
-    local i = 1;
+    local i = 2;
     for x=0,side-1 do
         for y=0,side-1 do
             for z=0,side-1 do
@@ -75,15 +77,22 @@ end
 startUp()
 
 local it = 0
+local it2 = 0
 local dt = 0.1
 local lt = os.clock()
 while true do
     it = it + 1
+    it2 = it2 + 1
     dynamicsWorld:stepSimulation(dt, 2);
 
     if it >= 10 then
         print("TPS: ",10 / (os.clock() - lt))
         it = 0
         lt = os.clock()
+    end
+
+    if it2 % 100 == 0 then
+        print("Reset")
+        resetPositions()
     end
 end
