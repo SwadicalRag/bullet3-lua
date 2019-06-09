@@ -413,7 +413,7 @@ interface btDefaultCollisionConstructionInfo {
   void btDefaultCollisionConstructionInfo();
 };
 
-interface btDefaultCollisionConfiguration {
+interface btDefaultCollisionConfiguration : btCollisionConfiguration {
   void btDefaultCollisionConfiguration([Ref] optional btDefaultCollisionConstructionInfo info);
 };
 
@@ -452,7 +452,7 @@ interface btBroadphaseInterface {
 interface btCollisionConfiguration {
 };
 
-interface btDbvtBroadphase {
+interface btDbvtBroadphase : btBroadphaseInterface {
   void btDbvtBroadphase();
 };
 
@@ -567,7 +567,7 @@ interface btGeneric6DofSpringConstraint : btGeneric6DofConstraint {
   void setDamping(long index, float damping);
 };
 
-interface btSequentialImpulseConstraintSolver {
+interface btSequentialImpulseConstraintSolver : btConstraintSolver {
   void btSequentialImpulseConstraintSolver();
 };
 
