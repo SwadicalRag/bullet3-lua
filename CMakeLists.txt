@@ -20,6 +20,13 @@ IF (NOT CMAKE_BUILD_TYPE)
  SET(CMAKE_BUILD_TYPE "Release")
 ENDIF (NOT CMAKE_BUILD_TYPE)
 
+macro(remove_cxx_flag flag)
+	string(REPLACE "${flag}" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+endmacro()
+
+remove_cxx_flag("-O3")
+SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
+
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 #MESSAGE("CMAKE_CXX_FLAGS_DEBUG="+${CMAKE_CXX_FLAGS_DEBUG})
 
@@ -440,7 +447,7 @@ add_custom_command(
 add_custom_command(
 	DEPENDS bullet3_lua.wasm
 	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.min.lua
-	COMMAND wasm2lua ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.min.lua -b ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl --libmode --minify
+	COMMAND wasm2lua ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.min.lua -b ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl --libmode --minify 3
 )
 
 add_custom_command(
@@ -452,7 +459,7 @@ add_custom_command(
 add_custom_command(
 	DEPENDS bullet3_lua.wasm
 	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.pure.min.lua
-	COMMAND wasm2lua ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.pure.min.lua -b ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl --libmode --pureLua --minify
+	COMMAND wasm2lua ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3_lua.wasm ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.pure.min.lua -b ${CMAKE_CURRENT_SOURCE_DIR}/bindings.idl --libmode --pureLua --minify 3
 )
 
 add_custom_target(bullet3_lua ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/bullet3.lua)
