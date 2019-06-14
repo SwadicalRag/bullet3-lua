@@ -522,6 +522,16 @@ public:
 		}
 	};
 
+	btScalar* getEulerYPRSimple() {
+		// blah blah thread unsafe
+		// et cetera
+		static btScalar out[3];
+
+		getEulerYPR(out[0],out[1],out[2]);
+
+		return out;
+	};
+
 	/**@brief Get the matrix represented as euler angles around ZYX
 	* @param yaw Yaw around Z axis
 	* @param pitch Pitch around Y axis

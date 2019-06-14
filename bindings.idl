@@ -87,6 +87,8 @@ interface btQuaternion : btQuadWord {
 
 interface btMatrix3x3 {
   void setEulerZYX(float ex, float ey, float ez);
+  void setEulerYPR(float y, float p, float r);
+  [Array="3"] float getEulerYPRSimple();
   void getRotation([Ref] btQuaternion q);
   [Value] btVector3 getRow(long y);
 };
@@ -466,7 +468,7 @@ interface btBroadphaseProxy {
 
 [Prefix="btRigidBody::"]
 interface btRigidBodyConstructionInfo {
-  void btRigidBodyConstructionInfo(float mass, btMotionState motionState, btCollisionShape collisionShape, [Ref] optional btVector3 localInertia);
+  void btRigidBodyConstructionInfo(float mass,[ToWASMOwned] btMotionState motionState,[ToWASMOwned] btCollisionShape collisionShape, [Ref] optional btVector3 localInertia);
   attribute float m_linearDamping;
   attribute float m_angularDamping;
   attribute float m_friction;
@@ -658,13 +660,13 @@ interface btDynamicsWorld : btCollisionWorld {
 };
 
 interface btDiscreteDynamicsWorld {
-  void btDiscreteDynamicsWorld(btDispatcher dispatcher, btBroadphaseInterface pairCache, btConstraintSolver constraintSolver, btCollisionConfiguration collisionConfiguration);
+  void btDiscreteDynamicsWorld([ToWASMOwned] btDispatcher dispatcher,[ToWASMOwned]  btBroadphaseInterface pairCache,[ToWASMOwned] btConstraintSolver constraintSolver,[ToWASMOwned] btCollisionConfiguration collisionConfiguration);
 
   void setGravity([Ref] btVector3 gravity);
   [Value] btVector3 getGravity();
 
-  void addRigidBody(btRigidBody body);
-  void addRigidBody(btRigidBody body, short group, short mask);
+  void addRigidBody([ToWASMOwned] btRigidBody body);
+  void addRigidBody([ToWASMOwned] btRigidBody body, short group, short mask);
   void removeRigidBody(btRigidBody body);
 
   void addConstraint(btTypedConstraint constraint, optional boolean disableCollisionsBetweenLinkedBodies);

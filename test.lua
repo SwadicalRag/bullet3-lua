@@ -1,6 +1,8 @@
-jit.opt.start("maxtrace=8000","maxsnap=2560000","loopunroll=500","maxmcode=16384","maxrecord=16000","maxirconst=4000")
+jit.opt.start("maxtrace=8000","maxmcode=16384")
 
-local module = dofile("bin/bullet3.min.lua")
+local module = dofile("bin/bullet3.lua")
+
+local N_BOXES = 100
 
 module.init()
 
@@ -12,7 +14,7 @@ local dynamicsWorld = module.bindings.btDiscreteDynamicsWorld(dispatcher, overla
 
 dynamicsWorld:setGravity(module.bindings.btVector3(0, -10, 0))
 
-local groundShape = module.bindings.btBoxShape(module.bindings.btVector3(50, 50, 50));
+local groundShape = module.bindings.btBoxShape(module.bindings.btVector3(N_BOXES, N_BOXES, N_BOXES));
 
 local groundTransform = module.bindings.btTransform();
 groundTransform:setIdentity();
@@ -33,7 +35,7 @@ end
 local boxShape = module.bindings.btBoxShape(module.bindings.btVector3(1, 1, 1));
 
 local function resetPositions()
-    local side = math.ceil(math.pow(50, 1/3));
+    local side = math.ceil(math.pow(N_BOXES, 1/3));
     local i = 2;
     for x=0,side-1 do
         for y=0,side-1 do
@@ -56,7 +58,7 @@ local function resetPositions()
 end
 
 local function startUp()
-    for i=1,50 do
+    for i=1,N_BOXES do
         local startTransform = module.bindings.btTransform();
         startTransform:setIdentity();
         local mass = 1;
@@ -83,7 +85,7 @@ local lt = os.clock()
 while true do
     it = it + 1
     it2 = it2 + 1
-    dynamicsWorld:stepSimulation(dt, 2);
+    dynamicsWorld:stepSimulation(dt, 1);
 
     if it >= 10 then
         print("TPS: ",10 / (os.clock() - lt))
@@ -95,4 +97,6 @@ while true do
         print("Reset")
         resetPositions()
     end
+
+    -- if it2 > 100 then return end
 end
